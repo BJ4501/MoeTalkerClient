@@ -12,14 +12,7 @@ import net.bj.moetalker.common.app.Activity;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class MainActivity extends Activity implements IView {
-    @BindView(R.id.txt_result)
-    TextView mResultText;
-
-    @BindView(R.id.edit_query)
-    EditText mInputTest;
-
-    private IPresenter mPresenter;
+public class MainActivity extends Activity  {
 
 
 
@@ -28,24 +21,9 @@ public class MainActivity extends Activity implements IView {
         return R.layout.activity_main;
     }
 
-    @OnClick(R.id.btn_submit)
-    void onSubmit(){
-        mPresenter.Search();
-    }
-
     @Override
     protected void initData() {
         super.initData();
-        mPresenter = new Presenter(this);
     }
 
-    @Override
-    public String getInputString() {
-        return mInputTest.getText().toString();
-    }
-
-    @Override
-    public void setResultString(String string) {
-        mResultText.setText(string);
-    }
 }
