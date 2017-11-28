@@ -1,14 +1,21 @@
 package net.bj.moetalker.common.app;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.*;
 import android.support.v7.app.AppCompatActivity;
+
+import java.util.List;
+
+import butterknife.ButterKnife;
 
 /**
  * Created by Neko-T4 on 2017/11/24.
  */
 
 public abstract class Activity extends AppCompatActivity {
+
     //onCreate常规初始化界面 在此类中
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +62,7 @@ public abstract class Activity extends AppCompatActivity {
      * 初始化控件
      */
     protected void initWidget(){
+        ButterKnife.bind(this);
 
     }
 
@@ -74,6 +82,22 @@ public abstract class Activity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        //得到当前Activity下所有Fragment
+        List<android.support.v4.app.Fragment> fragmentList = getSupportFragmentManager().getFragments();
+        //判断是否为空
+        if(fragmentList != null&& fragmentList.size() > 0){
+            //TODO Fragment 类型
+            for(android.support.v4.app.Fragment fragment : fragmentList){
+                //判断是否为我们能够处理的Fragment类型
+                if(fragment instanceof Fragment){
+                    //判断是否拦截了返回按钮
+                    if(((Fragment) fragment).onBackPrecessed()){
+                        //如果有直接Return
+                        return;
+                    }
+                }
+            }
+        }
 
 
 

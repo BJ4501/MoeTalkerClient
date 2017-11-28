@@ -7,4 +7,5 @@ package net.bj.moetalker.common;
 public class Common {
 
 
+
 }
