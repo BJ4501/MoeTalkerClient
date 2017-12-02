@@ -68,10 +68,12 @@
         android:layout_height="@dimen/len_52"
         android:layout_marginBottom="@dimen/len_68"
         android:layout_marginEnd="@dimen/len_16"
+        android:translationY="@dimen/len_76"
         app:layout_anchor="@id/lay_container"
         app:layout_anchorGravity="bottom|end"
         />
     <android.support.design.widget.BottomNavigationView
+        tools:visibility="invisible"
         android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="@dimen/len_52"
