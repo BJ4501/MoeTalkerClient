@@ -21,6 +21,7 @@ import net.bj.moetalker.common.app.Activity;
 import net.bj.moetalker.common.widget.PortraitView;
 import net.bj.moetalker.push.frags.main.ActiveFragment;
 import net.bj.moetalker.push.frags.main.GroupFragment;
+import net.bj.moetalker.push.helper.NavHelper;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -38,6 +39,8 @@ public class MainActivity extends Activity implements BottomNavigationView.OnNav
     @BindView(R.id.navigation)
     BottomNavigationView mNavigation;
 
+    private NavHelper mNavHelper;
+
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_main;
@@ -47,6 +50,10 @@ public class MainActivity extends Activity implements BottomNavigationView.OnNav
     protected void initWidget() {
         super.initWidget();
 
+        //初始化底部辅助工具类
+        mNavHelper = new NavHelper();
+
+        //添加对底部按钮点击的监听
         mNavigation.setOnNavigationItemSelectedListener(this);
 
 
@@ -76,41 +83,15 @@ public class MainActivity extends Activity implements BottomNavigationView.OnNav
 
     }
 
-    boolean isFirst = true;
+
+    /**
+     * 当我们的底部导航被点击的时候触发
+     * @param item MenuItem
+     * @return True 代表我们能够处理这个点击
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-        if (item.getItemId() == R.id.action_home){
-            mTitle.setText(R.string.title_home);
-            ActiveFragment activeFragment = new ActiveFragment();
-
-            if (isFirst){
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.lay_container,activeFragment).commit();
-                isFirst = false;
-            }else {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.lay_container,activeFragment).commit();
-            }
-
-
-
-        }else if(item.getItemId() == R.id.action_group){
-            mTitle.setText(R.string.title_group);
-            GroupFragment groupFragment = new GroupFragment();
-            if (isFirst){
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.lay_container,groupFragment).commit();
-                isFirst = false;
-            }else {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.lay_container,groupFragment).commit();
-            }
-        }
-
-
-
-        mTitle.setText(item.getTitle());
-        return true;
+        //转接事件流到工具类中
+        return mNavHelper.performClickMenu(item.getItemId());
     }
 }
