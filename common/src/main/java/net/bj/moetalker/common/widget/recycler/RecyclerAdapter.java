@@ -178,6 +178,19 @@ public abstract class RecyclerAdapter<Data>
         notifyDataSetChanged();
     }
 
+    @Override
+    public void update(Data data, ViewHolder<Data> holder) {
+        //得到当前ViewHolder的坐标
+        int pos = holder.getAdapterPosition();
+        if(pos >= 0){
+            //进行数据的移除与更新
+            mDataList.remove(pos);
+            mDataList.add(pos,data);
+            //通知这个坐标下的数据有更新
+            notifyItemChanged(pos);
+        }
+
+    }
 
     @Override
     public void onClick(View view) {
@@ -266,6 +279,24 @@ public abstract class RecyclerAdapter<Data>
 
 
 
+    }
+
+
+    /**
+     * 对回调接口做一次实现 AdapterListener
+     * @param <Data>
+     */
+    public static abstract class AdapterListenerImpl<Data> implements AdapterListener<Data>{
+
+        @Override
+        public void onItemClick(ViewHolder holder, Data data) {
+
+        }
+
+        @Override
+        public void onItemLongClick(ViewHolder holder, Data data) {
+
+        }
     }
 
 }
