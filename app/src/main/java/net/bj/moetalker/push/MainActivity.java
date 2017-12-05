@@ -22,6 +22,7 @@ import com.bumptech.glide.request.target.ViewTarget;
 import net.bj.moetalker.common.Common;
 import net.bj.moetalker.common.app.Activity;
 import net.bj.moetalker.common.widget.PortraitView;
+import net.bj.moetalker.push.activities.AccountActivity;
 import net.bj.moetalker.push.frags.main.ActiveFragment;
 import net.bj.moetalker.push.frags.main.ContactFragment;
 import net.bj.moetalker.push.frags.main.GroupFragment;
@@ -103,7 +104,7 @@ public class MainActivity extends Activity
 
     @OnClick(R.id.btn_action)
     void onActionClick(){
-
+        AccountActivity.show(this);
     }
 
 
