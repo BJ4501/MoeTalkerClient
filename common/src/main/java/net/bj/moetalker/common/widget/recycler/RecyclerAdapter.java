@@ -89,7 +89,7 @@ public abstract class RecyclerAdapter<Data>
         //绑定callback
         holder.callback = this;
 
-        return null;
+        return holder;
     }
 
     /**
