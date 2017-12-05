@@ -3,6 +3,7 @@ package net.bj.moetalker.push.frags.account;
 import net.bj.moetalker.common.app.Fragment;
 import net.bj.moetalker.common.widget.PortraitView;
 import net.bj.moetalker.push.R;
+import net.bj.moetalker.push.frags.media.GalleryFragment;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -25,7 +26,14 @@ public class UpdateInfoFragment extends Fragment {
 
     @OnClick(R.id.im_portrait)
     void onPortraitClick(){
-        
+        new GalleryFragment().setmListener(new GalleryFragment.OnSelectedListener() {
+            @Override
+            public void onSelectedImage(String path) {
+
+            }
+        }).show(getChildFragmentManager(),GalleryFragment.class.getName());
+        //show的时候建议使用getChildFragmentManager
+        //tag GalleryFragment class name
     }
 
 }

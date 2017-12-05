@@ -6,6 +6,7 @@
 
     <net.bj.moetalker.common.widget.PortraitView
         android:id="@+id/im_portrait"
+        android:src="@color/colorAccent"
         android:layout_width="@dimen/portraitMaxSize"
         android:layout_height="@dimen/portraitMaxSize"
         android:layout_gravity="center"
