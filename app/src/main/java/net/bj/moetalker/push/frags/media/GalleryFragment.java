@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import net.bj.moetalker.common.tools.UiTool;
 import net.bj.moetalker.common.widget.GalleryView;
 import net.bj.moetalker.push.R;
 import net.qiujuer.genius.ui.Ui;
@@ -107,12 +108,14 @@ public class GalleryFragment extends BottomSheetDialogFragment implements Galler
             if(window == null)
                 return;
             //得到屏幕高度
-            int screenHeight = getContext().getResources().getDisplayMetrics().heightPixels;
+            //int screenHeight = getContext().getResources().getDisplayMetrics().heightPixels;
+            int screenHeight = UiTool.getScreenHeight(getOwnerActivity());
             //得到状态栏高度
-            int statusHeight = (int) Ui.dipToPx(getContext().getResources(),25);
+            //int statusHeight = (int) Ui.dipToPx(getContext().getResources(),25);
+            int statusHeight = UiTool.getStatusBarHeight(getOwnerActivity());
 
+            //计算dialog的高度
             int dialogHeight = screenHeight - statusHeight;
-
             window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
                     dialogHeight<=0?ViewGroup.LayoutParams.MATCH_PARENT:dialogHeight);
 
