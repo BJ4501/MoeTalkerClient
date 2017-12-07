@@ -1,5 +1,7 @@
-package net.bj.moetalker.push;
+package net.bj.moetalker.push.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
@@ -22,7 +24,9 @@ import com.bumptech.glide.request.target.ViewTarget;
 import net.bj.moetalker.common.Common;
 import net.bj.moetalker.common.app.Activity;
 import net.bj.moetalker.common.widget.PortraitView;
+import net.bj.moetalker.push.R;
 import net.bj.moetalker.push.activities.AccountActivity;
+import net.bj.moetalker.push.frags.assist.PermissionsFragment;
 import net.bj.moetalker.push.frags.main.ActiveFragment;
 import net.bj.moetalker.push.frags.main.ContactFragment;
 import net.bj.moetalker.push.frags.main.GroupFragment;
@@ -55,6 +59,14 @@ public class MainActivity extends Activity
 
     private NavHelper<Integer> mNavHelper;
 
+    /**
+     * MainActivity 显示的入口
+     * @param context 上下文
+     */
+    public static void show(Context context){
+        context.startActivity(new Intent(context,MainActivity.class));
+    }
+
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_main;
@@ -83,7 +95,6 @@ public class MainActivity extends Activity
                 this.view.setBackground(resource.getCurrent());
             }
         });
-
     }
 
     @Override

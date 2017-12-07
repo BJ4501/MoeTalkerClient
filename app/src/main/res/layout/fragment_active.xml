@@ -4,11 +4,11 @@
     android:layout_height="match_parent"
     tools:context="net.bj.moetalker.push.frags.main.ActiveFragment">
 
-    <net.bj.moetalker.common.widget.GalleryView
+    <!--net.bj.moetalker.common.widget.GalleryView
         android:id="@+id/galleryView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="1dp"
-        />
+        /-->
 
 </FrameLayout>
