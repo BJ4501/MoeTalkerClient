@@ -3,6 +3,7 @@ package net.bj.moetalker.push.frags.account;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.yalantis.ucrop.UCrop;
@@ -12,6 +13,8 @@ import net.bj.moetalker.common.app.Fragment;
 import net.bj.moetalker.common.widget.PortraitView;
 import net.bj.moetalker.push.R;
 import net.bj.moetalker.push.frags.media.GalleryFragment;
+import net.bj.talker.factory.Factory;
+import net.bj.talker.factory.net.UploadHelper;
 
 import java.io.File;
 
@@ -88,6 +91,17 @@ public class UpdateInfoFragment extends Fragment {
                 .asBitmap()
                 .centerCrop()
                 .into(mPortrait);
+
+        //拿到本地文件地址
+        final String localPath = uri.getPath();
+        Log.e("TAG","localPath:"+localPath);
+        Factory.runOnAsync(new Runnable() {
+            @Override
+            public void run() {
+                String url =  UploadHelper.uploadPortrait(localPath);
+                Log.e("TAG","url:"+url);
+            }
+        });
     }
 
 }
