@@ -169,4 +169,5 @@ public class MainActivity extends Activity
 
 
     }
+    //TODO 扩展功能，天气状态的显示，实时显示天气
 }
