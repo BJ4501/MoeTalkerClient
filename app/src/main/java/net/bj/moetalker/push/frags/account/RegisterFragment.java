@@ -1,17 +1,18 @@
 package net.bj.moetalker.push.frags.account;
 
 
-
-
 import android.content.Context;
 
-import net.bj.moetalker.common.app.Fragment;
+import net.bj.moetalker.common.app.PresenterFragment;
+import net.bj.moetalker.factory.presenter.BaseContract;
 import net.bj.moetalker.push.R;
+import net.bj.talker.factory.presenter.account.RegisterContract;
+import net.bj.talker.factory.presenter.account.RegisterPresenter;
 
 /**
  * 注册界面
  */
-public class RegisterFragment extends Fragment {
+public class RegisterFragment extends PresenterFragment<RegisterContract.Presenter> implements RegisterContract.View {
     private AccountTrigger mAccountTrigger;
 
     public RegisterFragment() {
@@ -26,7 +27,17 @@ public class RegisterFragment extends Fragment {
     }
 
     @Override
+    protected RegisterContract.Presenter initPresenter() {
+        return new RegisterPresenter(this);
+    }
+
+    @Override
     protected int getContentLayoutId() {
         return R.layout.fragment_register;
+    }
+
+    @Override
+    public void registerSuccess() {
+
     }
 }
