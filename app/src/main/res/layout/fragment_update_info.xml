@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="net.bj.moetalker.push.frags.account.UpdateInfoFragment">
+    tools:context="net.bj.moetalker.push.frags.user.UpdateInfoFragment">
 
     <net.bj.moetalker.common.widget.PortraitView
         android:id="@+id/im_portrait"

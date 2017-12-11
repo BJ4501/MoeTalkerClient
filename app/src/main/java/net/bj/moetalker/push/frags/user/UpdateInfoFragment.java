@@ -1,4 +1,4 @@
-package net.bj.moetalker.push.frags.account;
+package net.bj.moetalker.push.frags.user;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
