@@ -2,8 +2,16 @@ package net.bj.talker.factory.data.helper;
 
 import net.bj.moetalker.factory.data.DataSource;
 import net.bj.talker.factory.R;
+import net.bj.talker.factory.model.api.RspModel;
+import net.bj.talker.factory.model.api.account.AccountRspModel;
 import net.bj.talker.factory.model.api.account.RegisterModel;
 import net.bj.talker.factory.model.db.User;
+import net.bj.talker.factory.net.Network;
+import net.bj.talker.factory.net.RemoteService;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * 网络请求
@@ -18,21 +26,50 @@ public class AccountHelper {
      * @param callback 成功与失败的接口回送
      */
     public static void register(RegisterModel model, final DataSource.Callback<User> callback){
+        //调用Retrofit对网络请求接口做代理
+        RemoteService service = Network.getRetrofit().create(RemoteService.class);
+        //得到Call
+        Call<RspModel<AccountRspModel>> call = service.accountRegister(model);
 
-        new Thread(){
+        //异步请求
+        call.enqueue(new Callback<RspModel<AccountRspModel>>() {
             @Override
-            public void run() {
-                super.run();
-
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            public void onResponse(Call<RspModel<AccountRspModel>> call, Response<RspModel<AccountRspModel>> response) {
+                //请求成功返回
+                //从返回中得到全局Model，内部是使用的Gson进行解析
+                RspModel<AccountRspModel> rspModel = response.body();
+                if (rspModel.success()){
+                    //拿到实体
+                    AccountRspModel accountRspModel = rspModel.getResult();
+                    //判断绑定状态，是否绑定设备
+                    if (accountRspModel.isBind()) {
+                        User user = accountRspModel.getUser();
+                        //进行数据库写入和缓存绑定
+                        //然后返回
+                        callback.onDataLoaded(user);
+                    }else {
+                        //进行绑定
+                        bindPush(callback);
+                    }
+                }else {
+                    //TODO 对返回的RspModel中的失败的Code进行解析，解析到对应的String资源上面
+                    //callback.onDataNotAvailable();
                 }
-
-                callback.onDataNotAvailable(R.string.data_rsp_error_parameters);
             }
-        }.start();
+
+            @Override
+            public void onFailure(Call<RspModel<AccountRspModel>> call, Throwable t) {
+                //网络请求失败
+                callback.onDataNotAvailable(R.string.data_network_error);
+            }
+        });
+    }
+
+    /**
+     * 对设备id进行绑定操作
+     * @param callback
+     */
+    public static void bindPush(final DataSource.Callback<User> callback){
 
     }
 }
