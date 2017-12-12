@@ -21,7 +21,7 @@ public interface RemoteService {
      * @param model 传入的是RegisterModel
      * @return RspModel<AccountRspModel>
      */
-    @POST
+    @POST("account/register")
     Call<RspModel<AccountRspModel>> accountRegister(@Body RegisterModel model);
 
 }

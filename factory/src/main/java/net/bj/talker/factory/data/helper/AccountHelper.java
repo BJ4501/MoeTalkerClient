@@ -1,6 +1,7 @@
 package net.bj.talker.factory.data.helper;
 
 import net.bj.moetalker.factory.data.DataSource;
+import net.bj.talker.factory.Factory;
 import net.bj.talker.factory.R;
 import net.bj.talker.factory.model.api.RspModel;
 import net.bj.talker.factory.model.api.account.AccountRspModel;
@@ -44,7 +45,7 @@ public class AccountHelper {
                     //判断绑定状态，是否绑定设备
                     if (accountRspModel.isBind()) {
                         User user = accountRspModel.getUser();
-                        //进行数据库写入和缓存绑定
+                        //TODO 进行数据库写入和缓存绑定
                         //然后返回
                         callback.onDataLoaded(user);
                     }else {
@@ -52,8 +53,8 @@ public class AccountHelper {
                         bindPush(callback);
                     }
                 }else {
-                    //TODO 对返回的RspModel中的失败的Code进行解析，解析到对应的String资源上面
-                    //callback.onDataNotAvailable();
+                    //错误解析
+                    Factory.decodeRspCode(rspModel,callback);
                 }
             }
 
@@ -70,6 +71,7 @@ public class AccountHelper {
      * @param callback
      */
     public static void bindPush(final DataSource.Callback<User> callback){
-
+        //先抛出一个错误，其实是绑定没有进行
+        callback.onDataNotAvailable(R.string.app_name);
     }
 }
