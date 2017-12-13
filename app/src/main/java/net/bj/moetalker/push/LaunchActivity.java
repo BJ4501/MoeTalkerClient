@@ -12,6 +12,7 @@ import android.util.Property;
 import android.view.View;
 
 import net.bj.moetalker.common.app.Activity;
+import net.bj.moetalker.push.activities.AccountActivity;
 import net.bj.moetalker.push.activities.MainActivity;
 import net.bj.moetalker.push.frags.assist.PermissionsFragment;
 import net.bj.talker.factory.persistence.Account;
@@ -63,11 +64,21 @@ public class LaunchActivity extends Activity {
      * 等待个推框架对PushId设置好值
      */
     private void waitPushReceiverId(){
-        //如果拿到了PushId
-        if (!TextUtils.isEmpty(Account.getPushId())){
-            //拿到之后跳转
-            skip();
-            return;
+        if (Account.isLogin()){
+            //已经登录状态下，判断是否绑定
+            //如果没有绑定则等待广播接收器进行绑定
+            if (Account.isBind()){
+                skip();
+                return;
+            }
+        }else {
+            //没有登录
+            //如果拿到了PushId,没有登录是不能绑定PushId的
+            if (!TextUtils.isEmpty(Account.getPushId())){
+                //拿到之后跳转
+                skip();
+                return;
+            }
         }
         //循环等待
         getWindow().getDecorView().postDelayed(new Runnable() {
@@ -94,7 +105,12 @@ public class LaunchActivity extends Activity {
     private void reallySkip(){
         //权限检测，跳转
         if(PermissionsFragment.haveAll(this,getSupportFragmentManager())){
-            MainActivity.show(this);
+            //检查跳转到主页还是登录界面
+            if (Account.isLogin()){
+                MainActivity.show(this);
+            }else {
+                AccountActivity.show(this);
+            }
             finish();
         }
     }

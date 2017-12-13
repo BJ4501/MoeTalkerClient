@@ -8,6 +8,7 @@ import com.google.gson.GsonBuilder;
 import net.bj.moetalker.common.app.Application;
 import net.bj.moetalker.factory.data.DataSource;
 import net.bj.talker.factory.model.api.RspModel;
+import net.bj.talker.factory.persistence.Account;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -37,6 +38,14 @@ public class Factory {
                 //TODO 设置一个过滤器，数据库界别的Model不进行Json转换
                 //setExclusionStrategies()
                 .create();
+    }
+
+    /**
+     * Factory中的初始化
+     */
+    public static void setup(){
+        //持久化的数据进行初始化
+        Account.load(app());
     }
 
     /**
@@ -141,4 +150,13 @@ public class Factory {
     private void logout() {
 
     }
+
+    /**
+     * 处理推送来的消息
+     * @param message message
+     */
+    public static void dispatchPush(String message){
+        //TODO message
+    }
+
 }
