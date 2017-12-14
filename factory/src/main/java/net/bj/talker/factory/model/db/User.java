@@ -1,29 +1,51 @@
 package net.bj.talker.factory.model.db;
 
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
 import java.util.Date;
 
 /**
  * Created by Neko-T4 on 2017/12/12.
  */
 
-public class User {
+@Table(database = AppDatabase.class)
+public class User extends BaseModel {
+    public static final int SEX_MAN = 1;
+    public static final int SEX_WOMAN = 2;
+    public static final int SEX_SECRECT = 3;
 
+    //主键
+    @PrimaryKey
     private String id;
+    @Column
     private String name;
+    @Column
     private String phone;
+    @Column
     private String portrait;
+    @Column
     private String desc;
+    @Column
     private int sex = 0;
 
     //我对某人的备注信息，也需要写入数据库
+    @Column
     private String alias;
     //用户关注人数量
+    @Column
     private int follows;
     //用户粉丝数量
+    @Column
     private int following;
     //我与当前User的关系状态，是否已经关注了这个人
-    private Boolean isFollow;
+    @Column
+    private boolean isFollow;
+
     //时间
+    @Column
     private Date modifyAt;
 
     public String getId() {
@@ -98,19 +120,19 @@ public class User {
         this.following = following;
     }
 
-    public Boolean getFollow() {
-        return isFollow;
-    }
-
-    public void setFollow(Boolean follow) {
-        isFollow = follow;
-    }
-
     public Date getModifyAt() {
         return modifyAt;
     }
 
     public void setModifyAt(Date modifyAt) {
         this.modifyAt = modifyAt;
+    }
+
+    public boolean isFollow() {
+        return isFollow;
+    }
+
+    public void setFollow(boolean follow) {
+        isFollow = follow;
     }
 }
