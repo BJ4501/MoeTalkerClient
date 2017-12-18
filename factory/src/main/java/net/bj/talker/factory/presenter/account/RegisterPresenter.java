@@ -9,6 +9,7 @@ import net.bj.talker.factory.R;
 import net.bj.talker.factory.data.helper.AccountHelper;
 import net.bj.talker.factory.model.api.account.RegisterModel;
 import net.bj.talker.factory.model.db.User;
+import net.bj.talker.factory.persistence.Account;
 import net.qiujuer.genius.kit.handler.Run;
 import net.qiujuer.genius.kit.handler.runable.Action;
 
@@ -18,7 +19,8 @@ import java.util.regex.Pattern;
  * Created by Neko-T4 on 2017/12/11.
  */
 
-public class RegisterPresenter extends BasePresenter<RegisterContract.View> implements RegisterContract.Presenter, DataSource.Callback<User> {
+public class RegisterPresenter extends BasePresenter<RegisterContract.View>
+        implements RegisterContract.Presenter, DataSource.Callback<User> {
     public RegisterPresenter(RegisterContract.View view) {
         super(view);
     }
@@ -44,7 +46,7 @@ public class RegisterPresenter extends BasePresenter<RegisterContract.View> impl
         }else {
             //进行网络请求
             //构造Model，进行请求调用
-            RegisterModel model = new RegisterModel(phone,password,name);
+            RegisterModel model = new RegisterModel(phone,password,name, Account.getPushId());
             //进行网络请求，并设置回送接口为自己
             AccountHelper.register(model,this);
         }

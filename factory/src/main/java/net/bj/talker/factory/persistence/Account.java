@@ -43,7 +43,11 @@ public class Account {
                 Context.MODE_PRIVATE);
         //存储数据  apply为异步操作，commit为同步操作
         sp.edit().putString(KEY_PUSH_ID,pushId)
-                .putBoolean(KEY_IS_BIND,isBind).apply();
+                .putBoolean(KEY_IS_BIND,isBind)
+                .putString(KEY_TOKEN,token)
+                .putString(KEY_USER_ID,userId)
+                .putString(KEY_ACCOUNT,account)
+                .apply();
     }
 
     /**
@@ -55,7 +59,9 @@ public class Account {
                 Context.MODE_PRIVATE);
         pushId = sp.getString(KEY_PUSH_ID,"");
         isBind = sp.getBoolean(KEY_IS_BIND,false);
-
+        token = sp.getString(KEY_TOKEN,"");
+        userId = sp.getString(KEY_USER_ID,"");
+        account = sp.getString(KEY_ACCOUNT,"");
     }
 
     /**
@@ -132,6 +138,14 @@ public class Account {
                 .from(User.class)
                 .where(User_Table.id.eq(userId))
                 .querySingle();
+    }
+
+    /**
+     * 获取当前Token
+     * @return
+     */
+    public static String getToken(){
+        return token;
     }
 
 }
