@@ -31,6 +31,7 @@ import net.bj.moetalker.push.frags.main.ActiveFragment;
 import net.bj.moetalker.push.frags.main.ContactFragment;
 import net.bj.moetalker.push.frags.main.GroupFragment;
 import net.bj.moetalker.push.helper.NavHelper;
+import net.bj.talker.factory.persistence.Account;
 import net.qiujuer.genius.ui.Ui;
 import net.qiujuer.genius.ui.widget.FloatActionButton;
 
@@ -65,6 +66,17 @@ public class MainActivity extends Activity
      */
     public static void show(Context context){
         context.startActivity(new Intent(context,MainActivity.class));
+    }
+
+    @Override
+    protected boolean initArgs(Bundle bundle) {
+        if(Account.isComplete()) {
+            //判断用户信息是否完全，完全则走正常流程
+            return super.initArgs(bundle);
+        }else {
+            UserActivity.show(this);
+            return false;
+        }
     }
 
     @Override
