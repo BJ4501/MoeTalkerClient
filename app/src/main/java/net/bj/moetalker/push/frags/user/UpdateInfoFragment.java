@@ -2,19 +2,28 @@ package net.bj.moetalker.push.frags.user;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.yalantis.ucrop.UCrop;
 
 import net.bj.moetalker.common.app.Application;
 import net.bj.moetalker.common.app.Fragment;
+import net.bj.moetalker.common.app.PresenterFragment;
 import net.bj.moetalker.common.widget.PortraitView;
 import net.bj.moetalker.push.R;
+import net.bj.moetalker.push.activities.MainActivity;
 import net.bj.moetalker.push.frags.media.GalleryFragment;
 import net.bj.talker.factory.Factory;
 import net.bj.talker.factory.net.UploadHelper;
+import net.bj.talker.factory.presenter.user.UpdateInfoContract;
+import net.bj.talker.factory.presenter.user.UpdateInfoPresenter;
+import net.qiujuer.genius.ui.widget.Loading;
 
 import java.io.File;
 
@@ -26,7 +35,22 @@ import static android.app.Activity.RESULT_OK;
 /**
  * 更新信息的界面
  */
-public class UpdateInfoFragment extends Fragment {
+public class UpdateInfoFragment extends PresenterFragment<UpdateInfoContract.Presenter>
+        implements UpdateInfoContract.View{
+
+    @BindView(R.id.im_sex)
+    ImageView mSex;
+    @BindView(R.id.edit_desc)
+    EditText mDesc;
+    @BindView(R.id.loading)
+    Loading mLoading;
+    @BindView(R.id.btn_submit)
+    Button mSubmit;
+
+    //头像的本地路径
+    private String mPortraitPath;
+    private Boolean isMan = true;
+
     @BindView(R.id.im_portrait)
     PortraitView mPortrait;
 
@@ -77,7 +101,7 @@ public class UpdateInfoFragment extends Fragment {
             }
 
         } else if (resultCode == UCrop.RESULT_ERROR) {
-            final Throwable cropError = UCrop.getError(data);
+            Application.showToast(R.string.data_rsp_error_unknown);
         }
     }
 
@@ -86,22 +110,71 @@ public class UpdateInfoFragment extends Fragment {
      * @param uri Uri
      */
     private void loadPortrait(Uri uri){
+        //得到头像地址
+        mPortraitPath = uri.getPath();
+
         Glide.with(this)
                 .load(uri)
                 .asBitmap()
                 .centerCrop()
                 .into(mPortrait);
-
-        //拿到本地文件地址
-        final String localPath = uri.getPath();
-        Log.e("TAG","localPath:"+localPath);
-        Factory.runOnAsync(new Runnable() {
-            @Override
-            public void run() {
-                String url =  UploadHelper.uploadPortrait(localPath);
-                Log.e("TAG","url:"+url);
-            }
-        });
     }
 
+    @OnClick(R.id.im_sex)
+    void onSexClick(){
+        //性别图标被点击时触发
+        isMan = !isMan;
+        Drawable drawable = getResources().getDrawable(isMan?R.drawable.ic_sex_man:R.drawable.ic_sex_woman);
+        mSex.setImageDrawable(drawable);
+        //性别图标背景替换：蓝色->粉色
+        mSex.getBackground().setLevel(isMan ? 0 : 1);
+    }
+
+    @OnClick(R.id.btn_submit)
+    void onSubmitClick(){
+        String desc = mDesc.getText().toString();
+        //调用P层进行注册
+        mPresenter.update(mPortraitPath,desc,isMan);
+    }
+
+    @Override
+    public void showError(int str) {
+        super.showError(str);
+        //当需要显示错误的时候触发，一定是结束了
+        //停止Loading
+        mLoading.stop();
+        //让控件可以输入
+        mDesc.setEnabled(true);
+        mPortrait.setEnabled(true);
+        mSex.setEnabled(true);
+        //提交按钮可以继续点击
+        mSubmit.setEnabled(true);
+    }
+
+    @Override
+    public void showLoading() {
+        super.showLoading();
+        //正在进行时，界面不可操作
+        //开始Loading
+        mLoading.start();
+        //让控件不可以输入
+        mDesc.setEnabled(false);
+        mPortrait.setEnabled(false);
+        mSex.setEnabled(false);
+        //提交按钮不可以继续点击
+        mSubmit.setEnabled(false);
+    }
+
+    @Override
+    public void updateSucceed() {
+        //更新成功，跳转到MainActivity界面
+        MainActivity.show(this.getContext());
+        getActivity().finish();
+    }
+
+    @Override
+    protected UpdateInfoContract.Presenter initPresenter() {
+        //初始化Presenter
+        return new UpdateInfoPresenter(this);
+    }
 }
