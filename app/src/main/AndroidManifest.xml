@@ -24,13 +24,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--个推广播注册 FIXME 包名如果有BUG检查-->
-        <receiver android:name=".MessageReceiver"
+
+        <!-- 个推广播注册 FIXME 包名如果有BUG检查 -->
+        <receiver
+            android:name=".MessageReceiver"
             android:enabled="true"
             android:exported="true"
             android:permission="1000">
             <intent-filter>
-                <action android:name="com.igexin.sdk.action.${GETUI_APP_ID}"/>
+                <action android:name="com.igexin.sdk.action.${GETUI_APP_ID}" />
             </intent-filter>
         </receiver>
 
@@ -60,7 +62,12 @@
             android:name=".activities.UserActivity"
             android:label="@string/title_activity_user"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Account"/>
+            android:theme="@style/AppTheme.Account" />
+        <activity
+            android:name=".activities.SearchActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.TransStatusBar"
+            android:label="@string/title_activity_search"/>
     </application>
 
 </manifest>

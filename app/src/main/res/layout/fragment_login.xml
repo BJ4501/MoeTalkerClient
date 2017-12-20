@@ -158,6 +158,7 @@
             app:gTouchColor="@color/colorAccentAlpha"
             app:gTouchCornerRadius="22dp"
             app:gTouchEffect="ripple" />
+        <!--TODO "app:gTouchColor="@color/colorAccentAlpha"" 遮罩颜色更改，蓝色不行-->
 
         <net.qiujuer.genius.ui.widget.Loading
             android:id="@+id/loading"
