@@ -67,7 +67,7 @@
             android:name=".activities.SearchActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.TransStatusBar"
-            android:label="@string/title_activity_search"/>
+            android:label="@string/title_search"/>
     </application>
 
 </manifest>
