@@ -1,6 +1,7 @@
 package net.bj.talker.factory.model.card;
 
 
+import net.bj.moetalker.factory.model.Author;
 import net.bj.talker.factory.model.db.User;
 
 import java.util.Date;
@@ -9,7 +10,7 @@ import java.util.Date;
  * Created by Neko-T4 on 2017/12/19.
  */
 
-public class UserCard {
+public class UserCard implements Author {
 
     private String id;
     private String name;
