@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import net.bj.moetalker.common.app.Fragment;
+import net.bj.moetalker.common.app.PresenterFragment;
 import net.bj.moetalker.common.widget.EmptyView;
 import net.bj.moetalker.common.widget.PortraitView;
 import net.bj.moetalker.common.widget.recycler.RecyclerAdapter;
@@ -17,11 +18,14 @@ import net.bj.moetalker.push.activities.MessageActivity;
 import net.bj.moetalker.push.frags.search.SearchUserFragment;
 import net.bj.talker.factory.model.card.UserCard;
 import net.bj.talker.factory.model.db.User;
+import net.bj.talker.factory.presenter.contact.ContactContract;
+import net.bj.talker.factory.presenter.contact.ContactPresenter;
 
 import butterknife.BindView;
 
 
-public class ContactFragment extends Fragment {
+public class ContactFragment extends PresenterFragment<ContactContract.Presenter>
+        implements ContactContract.View{
 
     @BindView(R.id.empty)
     EmptyView mEmptyView;
@@ -73,6 +77,29 @@ public class ContactFragment extends Fragment {
         setPlaceHolderView(mEmptyView);
     }
 
+    @Override
+    protected void onFirstInit() {
+        super.onFirstInit();
+        //进行一次数据加载
+        mPresenter.start();
+    }
+
+    @Override
+    protected ContactContract.Presenter initPresenter() {
+        //初始化Presenter
+        return new ContactPresenter(this);
+    }
+
+    @Override
+    public RecyclerAdapter<User> getRecyclerAdapter() {
+        return mAdapter;
+    }
+
+    @Override
+    public void onAdapterDataChanged() {
+        //进行界面操作
+        mPlaceHolderView.triggerOkOrEmpty(mAdapter.getItemCount() > 0);
+    }
 
 
     class ViewHolder extends RecyclerAdapter.ViewHolder<User>{

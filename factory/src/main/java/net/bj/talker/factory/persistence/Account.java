@@ -148,6 +148,14 @@ public class Account {
     }
 
     /**
+     * 返回用户Id
+     * @return 用户Id
+     */
+    public static String getUserId(){
+        return getUser().getId();
+    }
+
+    /**
      * 获取当前Token
      * @return
      */
