@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.*;
 import android.support.v7.app.AppCompatActivity;
 
+import net.bj.moetalker.common.widget.convention.PlaceHolderView;
+
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -15,6 +17,7 @@ import butterknife.ButterKnife;
  */
 
 public abstract class Activity extends AppCompatActivity {
+    protected PlaceHolderView mPlaceHolderView;
 
     //onCreate常规初始化界面 在此类中
     @Override
@@ -27,12 +30,19 @@ public abstract class Activity extends AppCompatActivity {
             //得到界面Id并设置到Activity界面中
             int layId = getContentLayoutId();
             setContentView(layId);
-
+            initBefore();
             initWidget();
             initData();
         }else {
             finish();
         }
+
+    }
+
+    /**
+     * 初始化控件调用之前
+     */
+    protected void initBefore(){
 
     }
 
@@ -107,5 +117,13 @@ public abstract class Activity extends AppCompatActivity {
         //当手机返回按钮被点击时
         super.onBackPressed();
         finish();
+    }
+
+    /**
+     * 设置占位布局
+     * @param placeHolderView 继承了占位布局规范的View
+     */
+    public void setPlaceHolderView(PlaceHolderView placeHolderView){
+        this.mPlaceHolderView = placeHolderView;
     }
 }

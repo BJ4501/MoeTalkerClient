@@ -14,6 +14,7 @@ import net.bj.moetalker.common.widget.EmptyView;
 import net.bj.moetalker.common.widget.PortraitView;
 import net.bj.moetalker.common.widget.recycler.RecyclerAdapter;
 import net.bj.moetalker.push.R;
+import net.bj.moetalker.push.activities.PersonalActivity;
 import net.bj.moetalker.push.activities.SearchActivity;
 import net.bj.talker.factory.model.card.UserCard;
 import net.bj.talker.factory.presenter.contact.FollowContract;
@@ -127,6 +128,12 @@ public class SearchUserFragment extends PresenterFragment<SearchContract.Present
             mPortraitView.setup(Glide.with(SearchUserFragment.this),userCard);
             mName.setText(userCard.getName());
             mFollow.setEnabled(!userCard.getFollow());
+        }
+
+        @OnClick(R.id.im_portrait)
+        void onPortraitClick(){
+            //显示信息
+            PersonalActivity.show(getContext(),mData.getId());
         }
 
         @OnClick(R.id.im_follow)

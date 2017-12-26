@@ -15,6 +15,7 @@ import net.bj.moetalker.common.widget.PortraitView;
 import net.bj.moetalker.common.widget.recycler.RecyclerAdapter;
 import net.bj.moetalker.push.R;
 import net.bj.moetalker.push.activities.MessageActivity;
+import net.bj.moetalker.push.activities.PersonalActivity;
 import net.bj.moetalker.push.frags.search.SearchUserFragment;
 import net.bj.talker.factory.model.card.UserCard;
 import net.bj.talker.factory.model.db.User;
@@ -22,6 +23,7 @@ import net.bj.talker.factory.presenter.contact.ContactContract;
 import net.bj.talker.factory.presenter.contact.ContactPresenter;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 
 public class ContactFragment extends PresenterFragment<ContactContract.Presenter>
@@ -121,5 +123,12 @@ public class ContactFragment extends PresenterFragment<ContactContract.Presenter
             mName.setText(user.getName());
             mDesc.setText(user.getDesc());
         }
+
+        @OnClick(R.id.im_portrait)
+        void onPortraitClick(){
+            //显示信息
+            PersonalActivity.show(getContext(),mData.getId());
+        }
+
     }
 }
