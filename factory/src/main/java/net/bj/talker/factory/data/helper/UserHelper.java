@@ -3,6 +3,7 @@ package net.bj.talker.factory.data.helper;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import net.bj.moetalker.factory.data.DataSource;
+import net.bj.moetalker.utils.CollectionUtil;
 import net.bj.talker.factory.Factory;
 import net.bj.talker.factory.R;
 import net.bj.talker.factory.model.api.RspModel;
@@ -40,10 +41,8 @@ public class UserHelper {
                 RspModel<UserCard> rspModel = response.body();
                 if (rspModel.success()){
                     UserCard userCard = rspModel.getResult();
-                    //数据库的存储操作，需要把UserCard转换为User
-                    User user = userCard.build();
-                    //异步统一的保存操作
-                    DbHelper.save(User.class,user);
+                    //唤起进行保存的操作
+                    Factory.getUserCenter().dispatch(userCard);
                     //返回成功
                     callback.onDataLoaded(userCard);
                 }else {
@@ -97,10 +96,8 @@ public class UserHelper {
                 RspModel<UserCard> rspModel = response.body();
                 if (rspModel.success()){
                     UserCard userCard = rspModel.getResult();
-                    //保存到本地数据库
-                    User user = userCard.build();
-                    //保存并通知联系人列表刷新
-                    DbHelper.save(User.class,user);
+                    //唤起进行保存的操作
+                    Factory.getUserCenter().dispatch(userCard);
                     //返回数据
                     callback.onDataLoaded(userCard);
                 }else {
@@ -115,24 +112,35 @@ public class UserHelper {
         });
     }
 
-    // 刷新联系人的操作
-    public static void refreshContacts(final DataSource.Callback<List<UserCard>> callback){
+    // 刷新联系人的操作，不需要Callback，
+    // 直接存储到数据库，并通过数据库观察者进行通知界面更新，
+    // 界面更新的时候进行对比，差异更新
+    public static void refreshContacts(){
         RemoteService service = Network.remote();
         service.userContacts().enqueue(new Callback<RspModel<List<UserCard>>>() {
             @Override
             public void onResponse(Call<RspModel<List<UserCard>>> call, Response<RspModel<List<UserCard>>> response) {
                 RspModel<List<UserCard>> rspModel = response.body();
                 if (rspModel.success()){
-                    //返回数据
-                    callback.onDataLoaded(rspModel.getResult());
+                    //拿到集合
+                    List<UserCard> cards = rspModel.getResult();
+                    if (cards==null||cards.size()==0)
+                        return;
+                    //唤起进行保存的操作
+                    //方法1
+                    //Factory.getUserCenter().dispatch(cards.toArray(new UserCard[0]));
+                    //方法2
+                    UserCard[] cards1 = CollectionUtil.toArray(cards,UserCard.class);
+                    Factory.getUserCenter().dispatch(cards1);
+
                 }else {
-                    Factory.decodeRspCode(rspModel,callback);
+                    Factory.decodeRspCode(rspModel,null);
                 }
             }
 
             @Override
             public void onFailure(Call<RspModel<List<UserCard>>> call, Throwable t) {
-                callback.onDataNotAvailable(R.string.data_network_error);
+               //nothing
             }
         });
     }
@@ -154,8 +162,8 @@ public class UserHelper {
             UserCard card = response.body().getResult();
             if (card != null){
                 User user = card.build();
-                //数据库的刷新，并通知
-                DbHelper.save(User.class,user);
+                //数据库的存储，并通知
+                Factory.getUserCenter().dispatch(card);
                 return user;
             }
         } catch (Exception e) {
