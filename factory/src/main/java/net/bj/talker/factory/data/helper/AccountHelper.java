@@ -77,6 +77,21 @@ public class AccountHelper {
 
     /**
      * 请求回调部分封装
+     * -------------------------------------------------
+     * HINT:保存的几种方式
+     * 第一种：直接保存
+     * user.save();
+     * 第二种 通过ModelAdapter保存--可以通过saveAll存储集合
+     * FlowManager.getModelAdapter(User.class).save(user);
+     * 第三种：事务中
+     * DatabaseDefinition df = FlowManager.getDatabase(AppDatabase.class);
+     * df.beginTransactionAsync(new ITransaction() {
+     *          #Override
+     *          public void execute(DatabaseWrapper databaseWrapper) {
+     *              FlowManager.getModelAdapter(User.class).save(user);
+     *          }
+     *      }).build().execute();
+     * ---------------------------------------------------
      */
     private static class AccountRspCallback implements Callback<RspModel<AccountRspModel>>{
 
@@ -96,19 +111,8 @@ public class AccountHelper {
                 AccountRspModel accountRspModel = rspModel.getResult();
                 //获取信息
                 User user = accountRspModel.getUser();
-                //TODO 进行数据库写入和缓存绑定
-                //第一种：直接保存
-                user.save();
-                //第二种 通过ModelAdapter保存--可以通过saveAll存储集合
-                        /*FlowManager.getModelAdapter(User.class).save(user);*/
-                //第三种：事务中
-                        /*DatabaseDefinition df = FlowManager.getDatabase(AppDatabase.class);
-                        df.beginTransactionAsync(new ITransaction() {
-                            @Override
-                            public void execute(DatabaseWrapper databaseWrapper) {
-                                FlowManager.getModelAdapter(User.class).save(user);
-                            }
-                        }).build().execute();*/
+                DbHelper.save(User.class,user);
+
                 // 同步到XML持久化当中
                 Account.login(accountRspModel);
 
