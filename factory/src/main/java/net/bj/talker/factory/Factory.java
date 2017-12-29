@@ -9,6 +9,8 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 
 import net.bj.moetalker.common.app.Application;
 import net.bj.moetalker.factory.data.DataSource;
+import net.bj.talker.factory.data.group.GroupCenter;
+import net.bj.talker.factory.data.group.GroupDispatcher;
 import net.bj.talker.factory.data.message.MessageCenter;
 import net.bj.talker.factory.data.message.MessageDispatcher;
 import net.bj.talker.factory.data.user.UserCenter;
@@ -185,6 +187,14 @@ public class Factory {
      */
     public static MessageCenter getMessageCenter(){
         return MessageDispatcher.instance();
+    }
+
+    /**
+     * 获取一个群处理中心的实现类
+     * @return 群中心的规范接口
+     */
+    public static GroupCenter getGroupCenter(){
+        return GroupDispatcher.instance();
     }
 
 }

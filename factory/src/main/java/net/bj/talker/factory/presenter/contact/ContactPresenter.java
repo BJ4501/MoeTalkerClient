@@ -58,37 +58,30 @@ public class ContactPresenter extends BasePresenter<ContactContract.View>
                 .execute();
 
         //加载网络数据
-        UserHelper.refreshContacts(new DataSource.Callback<List<UserCard>>() {
-            @Override
-            public void onDataNotAvailable(int strRes) {
-                //网络失败，因为本地有数据，不管错误
-            }
-
-            @Override
-            public void onDataLoaded(final List<UserCard> userCards) {
-                //转换为User
-                final List<User> users = new ArrayList<>();
-                for (UserCard userCard : userCards) {
-                    users.add(userCard.build());
-                }
-
-                //放入事务中，保存到数据库
-                DatabaseDefinition df = FlowManager.getDatabase(AppDatabase.class);
-                df.beginTransactionAsync(new ITransaction() {
-                    @Override
-                    public void execute(DatabaseWrapper databaseWrapper) {
-                        FlowManager.getModelAdapter(User.class).saveAll(users);
-                    }
-                }).build().execute();
-
-                //网络的数据往往是新的，我们需要直接刷新到界面
-                List<User> old = getView().getRecyclerAdapter().getItems();
-                //会导致数据顺序全部为新的数据集合
-                //getView().getRecyclerAdapter().replace(users);
-                diff(old,users);
-            }
-        });
+        UserHelper.refreshContacts();
     }
+
+
+    /*//转换为User
+    final List<User> users = new ArrayList<>();
+                for (UserCard userCard : userCards) {
+        users.add(userCard.build());
+    }
+
+    //放入事务中，保存到数据库
+    DatabaseDefinition df = FlowManager.getDatabase(AppDatabase.class);
+                df.beginTransactionAsync(new ITransaction() {
+        @Override
+        public void execute(DatabaseWrapper databaseWrapper) {
+            FlowManager.getModelAdapter(User.class).saveAll(users);
+        }
+    }).build().execute();
+
+    //网络的数据往往是新的，我们需要直接刷新到界面
+    List<User> old = getView().getRecyclerAdapter().getItems();
+    //会导致数据顺序全部为新的数据集合
+    //getView().getRecyclerAdapter().replace(users);
+    diff(old,users);*/
 
 
     private void diff(List<User> oldList, List<User> newList){
