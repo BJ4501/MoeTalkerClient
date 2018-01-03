@@ -14,6 +14,8 @@ import com.raizlabs.android.dbflow.structure.database.transaction.QueryTransacti
 import net.bj.moetalker.factory.data.DataSource;
 import net.bj.moetalker.factory.presenter.BasePresenter;
 import net.bj.talker.factory.data.helper.UserHelper;
+import net.bj.talker.factory.data.user.ContractDataSource;
+import net.bj.talker.factory.data.user.ContractRepository;
 import net.bj.talker.factory.model.card.UserCard;
 import net.bj.talker.factory.model.db.AppDatabase;
 import net.bj.talker.factory.model.db.User;
@@ -30,32 +32,20 @@ import java.util.List;
  */
 
 public class ContactPresenter extends BasePresenter<ContactContract.View>
-        implements ContactContract.Presenter{
+        implements ContactContract.Presenter,DataSource.SucceedCallback<List<User>>{
+
+    private ContractDataSource mSource;
     public ContactPresenter(ContactContract.View view) {
         super(view);
+        mSource = new ContractRepository();
     }
 
     @Override
     public void start() {
         super.start();
 
-        //加载本地数据库数据
-        SQLite.select()
-                .from(User.class)
-                .where(User_Table.isFollow.eq(true))
-                .and(User_Table.id.notEq(Account.getUserId()))
-                .orderBy(User_Table.name,true)
-                .limit(100)
-                .async()
-                .queryListResultCallback(new QueryTransaction.QueryResultListCallback<User>() {
-                    @Override
-                    public void onListQueryResult(QueryTransaction transaction, @NonNull List<User> tResult) {
-
-                        getView().getRecyclerAdapter().replace(tResult);
-                        getView().onAdapterDataChanged();
-                    }
-                })
-                .execute();
+        //进行本地的数据加载，并添加监听
+        mSource.load(this);
 
         //加载网络数据
         UserHelper.refreshContacts();
@@ -96,4 +86,16 @@ public class ContactPresenter extends BasePresenter<ContactContract.View>
         getView().onAdapterDataChanged();
     }
 
+    @Override
+    public void onDataLoaded(List<User> users) {
+        //无论如何操作，数据变更，最终都会通知到这里来
+
+    }
+
+    @Override
+    public void destory() {
+        super.destory();
+        //当界面销毁的时候，我们应该把数据监听进行销毁
+        mSource.dispose();
+    }
 }
