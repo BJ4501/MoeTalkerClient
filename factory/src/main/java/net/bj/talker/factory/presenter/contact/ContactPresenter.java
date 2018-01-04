@@ -11,8 +11,10 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
 import com.raizlabs.android.dbflow.structure.database.transaction.QueryTransaction;
 
+import net.bj.moetalker.common.widget.recycler.RecyclerAdapter;
 import net.bj.moetalker.factory.data.DataSource;
 import net.bj.moetalker.factory.presenter.BasePresenter;
+import net.bj.moetalker.factory.presenter.BaseRecyclerPresenter;
 import net.bj.talker.factory.data.helper.UserHelper;
 import net.bj.talker.factory.data.user.ContractDataSource;
 import net.bj.talker.factory.data.user.ContractRepository;
@@ -31,7 +33,7 @@ import java.util.List;
  * Created by Neko-T4 on 2017/12/25.
  */
 
-public class ContactPresenter extends BasePresenter<ContactContract.View>
+public class ContactPresenter extends BaseRecyclerPresenter<User,ContactContract.View>
         implements ContactContract.Presenter,DataSource.SucceedCallback<List<User>>{
 
     private ContractDataSource mSource;
@@ -73,23 +75,22 @@ public class ContactPresenter extends BasePresenter<ContactContract.View>
     //getView().getRecyclerAdapter().replace(users);
     diff(old,users);*/
 
-
-    private void diff(List<User> oldList, List<User> newList){
-        //进行数据对比
-        DiffUtil.Callback callback = new DiffUiDataCallback<>(oldList,newList);
-        DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback);
-        //在对比完成后进行数据的赋值
-        getView().getRecyclerAdapter().replace(newList);
-
-        //尝试刷新界面
-        result.dispatchUpdatesTo(getView().getRecyclerAdapter());
-        getView().onAdapterDataChanged();
-    }
-
+    //运行到这里是子线程
     @Override
     public void onDataLoaded(List<User> users) {
         //无论如何操作，数据变更，最终都会通知到这里来
+        final ContactContract.View view = getView();
+        if (view == null)
+            return;
+        RecyclerAdapter<User> adapter = view.getRecyclerAdapter();
+        List<User> old = adapter.getItems();
 
+        //进行数据对比
+        DiffUtil.Callback callback = new DiffUiDataCallback<>(old,users);
+        DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback);
+
+        //调用基类方法进行界面刷新
+        refreshData(result,users);
     }
 
     @Override
