@@ -35,4 +35,9 @@ public interface DataSource {
         void onDataNotAvailable(@StringRes int strRes);
     }
 
+    /**
+     * 对数据进行销毁
+     */
+    void dispose();
+
 }
