@@ -12,7 +12,9 @@ import net.bj.talker.factory.data.helper.DbHelper;
 import net.bj.talker.factory.model.db.BaseDbModel;
 import net.bj.talker.factory.model.db.User;
 import net.bj.talker.factory.persistence.Account;
+import net.qiujuer.genius.kit.reflect.Reflector;
 
+import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,14 +34,26 @@ public abstract class BaseDbRepository<Data extends BaseDbModel<Data>> implement
     //当前泛型对应的真实的class信息
     private Class<Data> dataClass;
 
+    @SuppressWarnings("unchecked")
+    public BaseDbRepository(){
+        //拿当前类的泛型数组信息
+        Type[] types = Reflector.getActualTypeArguments(BaseDbRepository.class,this.getClass());
+        dataClass = (Class<Data>) types[0];
+    }
+
     @Override
     public void load(SucceedCallback<List<Data>> callback) {
         this.callback = callback;
+        //进行数据库监听操作
+        registerDbChangedListener();
     }
 
     @Override
     public void dispose() {
+        //取消监听，销毁数据
         this.callback = null;
+        DbHelper.removeChangedListener(dataClass,this);
+        dataList.clear();
     }
 
     //数据库统一通知的地方:增加，更改
@@ -95,6 +109,14 @@ public abstract class BaseDbRepository<Data extends BaseDbModel<Data>> implement
      * @return
      */
     protected abstract boolean isRequired(Data data);
+
+    /**
+     * 添加数据库的监听操作
+     */
+    protected void registerDbChangedListener(){
+        DbHelper.addChangedListener(dataClass,this);
+    }
+
 
     //通知界面刷新的方法
     private void notifyDataChange(){

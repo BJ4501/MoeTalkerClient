@@ -23,6 +23,7 @@ import net.bj.talker.factory.model.db.AppDatabase;
 import net.bj.talker.factory.model.db.User;
 import net.bj.talker.factory.model.db.User_Table;
 import net.bj.talker.factory.persistence.Account;
+import net.bj.talker.factory.presenter.BaseSourcePresenter;
 import net.bj.talker.factory.utils.DiffUiDataCallback;
 
 import java.util.ArrayList;
@@ -33,26 +34,41 @@ import java.util.List;
  * Created by Neko-T4 on 2017/12/25.
  */
 
-public class ContactPresenter extends BaseRecyclerPresenter<User,ContactContract.View>
+public class ContactPresenter extends BaseSourcePresenter<User,User,ContractDataSource,ContactContract.View>
         implements ContactContract.Presenter,DataSource.SucceedCallback<List<User>>{
 
-    private ContractDataSource mSource;
     public ContactPresenter(ContactContract.View view) {
-        super(view);
-        mSource = new ContractRepository();
+        //初始化数据仓库
+        super(new ContractRepository(),view);
     }
 
     @Override
     public void start() {
         super.start();
 
-        //进行本地的数据加载，并添加监听
-        mSource.load(this);
-
         //加载网络数据
         UserHelper.refreshContacts();
     }
 
+    //运行到这里是子线程
+    @Override
+    public void onDataLoaded(List<User> users) {
+        //无论如何操作，数据变更，最终都会通知到这里来
+        final ContactContract.View view = getView();
+        if (view == null)
+            return;
+        RecyclerAdapter<User> adapter = view.getRecyclerAdapter();
+        List<User> old = adapter.getItems();
+
+        //进行数据对比
+        DiffUtil.Callback callback = new DiffUiDataCallback<>(old,users);
+        DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback);
+
+        //调用基类方法进行界面刷新
+        refreshData(result,users);
+    }
+
+}
 
     /*//转换为User
     final List<User> users = new ArrayList<>();
@@ -74,29 +90,3 @@ public class ContactPresenter extends BaseRecyclerPresenter<User,ContactContract
     //会导致数据顺序全部为新的数据集合
     //getView().getRecyclerAdapter().replace(users);
     diff(old,users);*/
-
-    //运行到这里是子线程
-    @Override
-    public void onDataLoaded(List<User> users) {
-        //无论如何操作，数据变更，最终都会通知到这里来
-        final ContactContract.View view = getView();
-        if (view == null)
-            return;
-        RecyclerAdapter<User> adapter = view.getRecyclerAdapter();
-        List<User> old = adapter.getItems();
-
-        //进行数据对比
-        DiffUtil.Callback callback = new DiffUiDataCallback<>(old,users);
-        DiffUtil.DiffResult result = DiffUtil.calculateDiff(callback);
-
-        //调用基类方法进行界面刷新
-        refreshData(result,users);
-    }
-
-    @Override
-    public void destory() {
-        super.destory();
-        //当界面销毁的时候，我们应该把数据监听进行销毁
-        mSource.dispose();
-    }
-}
