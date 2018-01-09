@@ -73,9 +73,12 @@ public abstract class Fragment extends android.support.v4.app.Fragment {
      * @param bundle 参数bundle
      * @return 如果参数正确返回True，错误返回False
      */
-    protected boolean initArgs(Bundle bundle){
+    /*protected boolean initArgs(Bundle bundle){
         //Bundle:用于Activity之间传递
         return true;
+    }*/
+    protected void initArgs(Bundle bundle){
+
     }
 
     /**
