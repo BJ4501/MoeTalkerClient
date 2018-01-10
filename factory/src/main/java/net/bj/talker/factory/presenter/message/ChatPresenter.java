@@ -2,7 +2,9 @@ package net.bj.talker.factory.presenter.message;
 
 import android.support.v7.util.DiffUtil;
 
+import net.bj.talker.factory.data.helper.MessageHelper;
 import net.bj.talker.factory.data.message.MessageDataSource;
+import net.bj.talker.factory.model.api.message.MsgCreateModel;
 import net.bj.talker.factory.model.db.Message;
 import net.bj.talker.factory.presenter.BaseSourcePresenter;
 import net.bj.talker.factory.utils.DiffUiDataCallback;
@@ -18,7 +20,9 @@ public class ChatPresenter<View extends ChatContract.View>
         extends BaseSourcePresenter<Message,Message,MessageDataSource,View>
         implements ChatContract.Presenter{
 
+    //接收者id，可能是群或人的id
     protected String mReceiverId;
+    //区分是人或群的id
     protected int mReceiverType;
 
     public ChatPresenter(MessageDataSource source, View view,
@@ -30,16 +34,25 @@ public class ChatPresenter<View extends ChatContract.View>
 
     @Override
     public void pushText(String content) {
+        //构建一个新的消息
+        MsgCreateModel model = new MsgCreateModel.Builder()
+                .receiver(mReceiverId,mReceiverType)
+                .content(content,Message.TYPE_STR)
+                .build();
 
+        //进行网络发送
+        MessageHelper.push(model);
     }
 
     @Override
     public void pushAudio(String path) {
+        //发送语音
 
     }
 
     @Override
     public void pushImages(String[] paths) {
+        //发送图片
 
     }
 
@@ -54,6 +67,7 @@ public class ChatPresenter<View extends ChatContract.View>
         if (view == null)
             return;
         //先拿到老数据
+        @SuppressWarnings("unchecked")
         List<Message> old = view.getRecyclerAdapter().getItems();
         //计算差异
         DiffUiDataCallback<Message> callback = new DiffUiDataCallback<>(old,messages);

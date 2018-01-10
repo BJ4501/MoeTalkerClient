@@ -4,7 +4,9 @@ import net.bj.talker.factory.model.api.RspModel;
 import net.bj.talker.factory.model.api.account.AccountRspModel;
 import net.bj.talker.factory.model.api.account.LoginModel;
 import net.bj.talker.factory.model.api.account.RegisterModel;
+import net.bj.talker.factory.model.api.message.MsgCreateModel;
 import net.bj.talker.factory.model.api.user.UserUpdateModel;
+import net.bj.talker.factory.model.card.MessageCard;
 import net.bj.talker.factory.model.card.UserCard;
 import net.bj.talker.factory.model.db.User;
 
@@ -66,7 +68,12 @@ public interface RemoteService {
     @GET("user/contact")
     Call<RspModel<List<UserCard>>> userContacts();
 
+    //查询某人的信息
     @GET("user/{userId}")
     Call<RspModel<UserCard>> userFind(@Path("userId") String userId);
+
+    //发送消息的接口
+    @POST("msg")
+    Call<RspModel<MessageCard>> msgPush(@Body MsgCreateModel model);
 
 }
