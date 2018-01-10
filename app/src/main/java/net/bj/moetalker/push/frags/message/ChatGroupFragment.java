@@ -8,11 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import net.bj.moetalker.push.R;
+import net.bj.talker.factory.model.db.Group;
+import net.bj.talker.factory.presenter.message.ChatContract;
 
 /**
- * A simple {@link Fragment} subclass.
+ * 群聊天界面
  */
-public class ChatGroupFragment extends ChatFragment {
+public class ChatGroupFragment extends ChatFragment<Group> implements ChatContract.GroupView {
 
 
     public ChatGroupFragment() {
@@ -24,4 +26,13 @@ public class ChatGroupFragment extends ChatFragment {
         return R.layout.fragment_chat_group;
     }
 
+    @Override
+    protected ChatContract.Presenter initPresenter() {
+        return null;
+    }
+
+    @Override
+    public void onInit(Group group) {
+
+    }
 }

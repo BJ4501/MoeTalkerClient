@@ -9,6 +9,9 @@ import android.view.View;
 import net.bj.moetalker.common.widget.PortraitView;
 import net.bj.moetalker.push.R;
 import net.bj.moetalker.push.activities.PersonalActivity;
+import net.bj.talker.factory.model.db.User;
+import net.bj.talker.factory.presenter.message.ChatContract;
+import net.bj.talker.factory.presenter.message.ChatUserPresenter;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -17,7 +20,7 @@ import butterknife.OnClick;
  * 用户聊天界面
  * A simple {@link Fragment} subclass.
  */
-public class ChatUserFragment extends ChatFragment {
+public class ChatUserFragment extends ChatFragment<User> implements ChatContract.UserView {
     @BindView(R.id.im_portrait)
     PortraitView mPortrait;
 
@@ -106,6 +109,15 @@ public class ChatUserFragment extends ChatFragment {
     }
 
 
+    @Override
+    protected ChatContract.Presenter initPresenter() {
+        //初始化Presenter
+        return new ChatUserPresenter(this, mReceiverId);
+    }
 
+    @Override
+    public void onInit(User user) {
+        //对和你聊天的朋友的信息初始化操作
 
+    }
 }

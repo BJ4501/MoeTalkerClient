@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import net.bj.moetalker.common.app.Fragment;
+import net.bj.moetalker.common.app.PresenterFragment;
 import net.bj.moetalker.common.widget.PortraitView;
 import net.bj.moetalker.common.widget.adapter.TextWatcherAdapter;
 import net.bj.moetalker.common.widget.recycler.RecyclerAdapter;
@@ -25,6 +26,7 @@ import net.bj.moetalker.push.activities.MessageActivity;
 import net.bj.talker.factory.model.db.Message;
 import net.bj.talker.factory.model.db.User;
 import net.bj.talker.factory.persistence.Account;
+import net.bj.talker.factory.presenter.message.ChatContract;
 import net.qiujuer.genius.ui.compat.UiCompat;
 import net.qiujuer.genius.ui.widget.Loading;
 
@@ -37,7 +39,8 @@ import butterknife.OnClick;
  * Created by Neko-T4 on 2018/1/8.
  */
 
-public abstract class ChatFragment extends Fragment implements AppBarLayout.OnOffsetChangedListener{
+public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatContract.Presenter>
+        implements AppBarLayout.OnOffsetChangedListener,ChatContract.View<InitModel>{
 
     protected String mReceiverId;
     protected Adapter mAdapter;
@@ -75,6 +78,13 @@ public abstract class ChatFragment extends Fragment implements AppBarLayout.OnOf
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new Adapter();
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        //开始进行初始化操作
+        mPresenter.start();
     }
 
     //初始化Toolbar
@@ -130,7 +140,9 @@ public abstract class ChatFragment extends Fragment implements AppBarLayout.OnOf
     void onSubmitClick(){
         if (mSubmit.isActivated()){
             //发送
-
+            String content = mContent.getText().toString();
+            mContent.setText("");
+            mPresenter.pushText(content);
         }else {
             onMoreClick();
 
@@ -139,6 +151,17 @@ public abstract class ChatFragment extends Fragment implements AppBarLayout.OnOf
 
     private void onMoreClick(){
         //TODO
+    }
+
+    @Override
+    public RecyclerAdapter<Message> getRecyclerAdapter() {
+        return mAdapter;
+    }
+
+    @Override
+    public void onAdapterDataChanged() {
+        //界面没有占位布局，Recycler是一直显示的，所以不需要做任何事情
+        //do nothing
     }
 
     //内容适配器
