@@ -13,6 +13,8 @@ import net.bj.moetalker.push.R;
 import net.bj.moetalker.push.frags.message.ChatGroupFragment;
 import net.bj.moetalker.push.frags.message.ChatUserFragment;
 import net.bj.talker.factory.model.db.Group;
+import net.bj.talker.factory.model.db.Message;
+import net.bj.talker.factory.model.db.Session;
 
 public class MessageActivity extends Activity {
     //接收者Id，可以是群，也可以是人的Id
@@ -22,6 +24,20 @@ public class MessageActivity extends Activity {
 
     private String mReceiverId;
     private Boolean mIsGroup;
+
+    /**
+     * 通过Session发起聊天
+     * @param context
+     * @param session
+     */
+    public static void show(Context context, Session session){
+        if (session == null || context == null || TextUtils.isEmpty(session.getId()))
+            return;
+        Intent intent = new Intent(context, MessageActivity.class);
+        intent.putExtra(KEY_RECEIVER_ID,session.getId());
+        intent.putExtra(KEY_RECEIVER_IS_GROUP,session.getReceiverType() == Message.RECEIVER_TYPE_GROUP);
+        context.startActivity(intent);
+    }
 
     /**
      * 显示人的聊天界面
