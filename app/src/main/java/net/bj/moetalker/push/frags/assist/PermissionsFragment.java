@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 
 import net.bj.moetalker.common.app.Application;
 import net.bj.moetalker.push.R;
+import net.bj.moetalker.push.activities.AccountActivity;
+import net.bj.moetalker.push.activities.MainActivity;
 import net.bj.moetalker.push.frags.media.GalleryFragment;
 
 import java.util.List;
@@ -201,7 +203,9 @@ public class PermissionsFragment extends BottomSheetDialogFragment
      */
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-
+        //TODO 权限申请完毕后跳转主页面
+        AccountActivity.show(this.getContext());
+        getActivity().finish();
     }
 
     /**

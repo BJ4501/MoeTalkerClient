@@ -22,6 +22,7 @@ import net.bj.moetalker.utils.DateTimeUtil;
 import net.bj.talker.factory.model.db.Session;
 import net.bj.talker.factory.model.db.User;
 import net.bj.talker.factory.presenter.message.SessionContract;
+import net.bj.talker.factory.presenter.message.SessionPresenter;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -89,7 +90,7 @@ public class ActiveFragment extends PresenterFragment<SessionContract.Presenter>
 
     @Override
     protected SessionContract.Presenter initPresenter() {
-        return null;
+        return new SessionPresenter(this);
     }
 
     @Override
