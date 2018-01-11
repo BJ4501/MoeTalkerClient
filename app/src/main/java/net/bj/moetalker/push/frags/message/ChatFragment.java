@@ -3,6 +3,7 @@ package net.bj.moetalker.push.frags.message;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -50,6 +51,9 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
 
     @BindView(R.id.recycler)
     RecyclerView mRecyclerView;
+
+    @BindView(R.id.collapsingToolbarLayout)
+    CollapsingToolbarLayout mCollapsingLayout;
 
     @BindView(R.id.appbar)
     AppBarLayout mAppBarLayout;
@@ -269,9 +273,10 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
         @OnClick(R.id.im_portrait)
         void onRePushClick(){
             //重新发送
-            if (mLoading != null){
+            if (mLoading != null && mPresenter.rePush(mData)){
                 //必须是右边的才有可能进行重新发送
-                //TODO 重新发送
+                //状态改变需要重新刷新界面当前信息
+                updateData(mData);
 
             }
         }
