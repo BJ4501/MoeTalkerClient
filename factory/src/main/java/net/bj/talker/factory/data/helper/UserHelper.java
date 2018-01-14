@@ -12,8 +12,10 @@ import net.bj.talker.factory.model.api.user.UserUpdateModel;
 import net.bj.talker.factory.model.card.UserCard;
 import net.bj.talker.factory.model.db.User;
 import net.bj.talker.factory.model.db.User_Table;
+import net.bj.talker.factory.model.db.view.UserSampleModel;
 import net.bj.talker.factory.net.Network;
 import net.bj.talker.factory.net.RemoteService;
+import net.bj.talker.factory.persistence.Account;
 import net.bj.talker.factory.presenter.contact.FollowPresenter;
 
 import java.io.IOException;
@@ -192,5 +194,33 @@ public class UserHelper {
         if (user == null)
             return findFromLocal(id);
         return user;
+    }
+
+    /**
+     * 获取联系人
+     */
+    public static List<User> getContact(){
+        return SQLite.select()
+                .from(User.class)
+                .where(User_Table.isFollow.eq(true))
+                .and(User_Table.id.notEq(Account.getUserId()))
+                .orderBy(User_Table.name,true)
+                .limit(100)
+                .queryList();
+    }
+
+    /**
+     * 获取一个联系人列表，
+     * 但是是一个简单的数据表
+     */
+    public static List<UserSampleModel> getSampleContact(){
+        return SQLite.select(User_Table.id.withTable().as("id"),
+                User_Table.name.withTable().as("name"),
+                User_Table.portrait.withTable().as("portrait"))
+                .from(User.class)
+                .where(User_Table.isFollow.eq(true))
+                .and(User_Table.id.notEq(Account.getUserId()))
+                .orderBy(User_Table.name,true)
+                .queryCustomList(UserSampleModel.class);//是查询符合这个类UserSampleModel结构
     }
 }
