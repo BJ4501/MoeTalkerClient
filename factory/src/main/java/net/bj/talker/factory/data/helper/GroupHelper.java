@@ -14,6 +14,8 @@ import net.bj.talker.factory.model.db.User;
 import net.bj.talker.factory.net.Network;
 import net.bj.talker.factory.net.RemoteService;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -24,6 +26,33 @@ import retrofit2.Response;
  */
 
 public class GroupHelper {
+    //搜索信息--异步
+    public static Call search(String content,final DataSource.Callback<List<GroupCard>> callback){
+        RemoteService service = Network.remote();
+        Call<RspModel<List<GroupCard>>> call = service.groupSearch(content);
+
+        call.enqueue(new Callback<RspModel<List<GroupCard>>>() {
+            @Override
+            public void onResponse(Call<RspModel<List<GroupCard>>> call, Response<RspModel<List<GroupCard>>> response) {
+                RspModel<List<GroupCard>> rspModel = response.body();
+                if (rspModel.success()){
+                    //返回数据
+                    callback.onDataLoaded(rspModel.getResult());
+                }else {
+                    Factory.decodeRspCode(rspModel,callback);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RspModel<List<GroupCard>>> call, Throwable t) {
+                callback.onDataNotAvailable(R.string.data_network_error);
+            }
+        });
+
+        //把当前的调度者返回
+        return call;
+    }
+
     public static Group find(String groupId) {
         Group group = findFromLocal(groupId);
         if (group == null)
