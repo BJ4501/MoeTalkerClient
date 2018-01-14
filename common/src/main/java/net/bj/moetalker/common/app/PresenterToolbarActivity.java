@@ -1,6 +1,8 @@
 package net.bj.moetalker.common.app;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 
@@ -15,6 +17,7 @@ public abstract class PresenterToolbarActivity<Presenter extends BaseContract.Pr
         extends ToolbarActivity implements BaseContract.View<Presenter>{
 
     protected Presenter mPresenter;
+    protected ProgressDialog mLoadingDialog;
 
     @Override
     protected void initBefore() {
@@ -40,6 +43,8 @@ public abstract class PresenterToolbarActivity<Presenter extends BaseContract.Pr
 
     @Override
     public void showError(int str) {
+        //不管怎么样，先隐藏Loading
+        hideDialogLoading();
         //显示错误，优先使用占位布局
         if (mPlaceHolderView != null) {
             mPlaceHolderView.triggerError(str);
@@ -52,10 +57,39 @@ public abstract class PresenterToolbarActivity<Presenter extends BaseContract.Pr
     public void showLoading() {
         if (mPlaceHolderView != null) {
             mPlaceHolderView.triggerLoading();
+        }else {
+            ProgressDialog dialog = mLoadingDialog;
+            if (dialog == null){
+                dialog = new ProgressDialog(this,R.style.AppTheme_Dialog_Alert_Light);
+                //设置不可以触摸点击取消
+                dialog.setCanceledOnTouchOutside(false);
+                //可以取消(强制取消)，就关闭界面
+                dialog.setCancelable(true);
+                dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        finish();
+                    }
+                });
+                mLoadingDialog = dialog;
+            }
+            dialog.setMessage(getText(R.string.prompt_loading));
+            dialog.show();
+        }
+    }
+
+    //隐藏Loading
+    protected void hideDialogLoading(){
+        ProgressDialog dialog = mLoadingDialog;
+        if (dialog != null){
+            mLoadingDialog = null;
+            dialog.dismiss();
         }
     }
 
     protected void hideLoading(){
+        //不管怎么样，先隐藏Loading
+        hideDialogLoading();
         if (mPlaceHolderView != null) {
             mPlaceHolderView.triggerOk();
         }

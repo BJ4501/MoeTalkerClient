@@ -145,7 +145,7 @@ public class GroupCreateActivity extends PresenterToolbarActivity<GroupCreateCon
         //菜单点击时
         if (item.getItemId() == R.id.action_create){
             //进行创建
-
+            onCreateClick();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -156,7 +156,7 @@ public class GroupCreateActivity extends PresenterToolbarActivity<GroupCreateCon
         String name = mName.getText().toString().trim();
         String desc = mDesc.getText().toString().trim();
 
-        mPresenter.create(name,desc,null);
+        mPresenter.create(name,desc,mPortraitPath);
     }
 
     //隐藏软键盘
@@ -172,7 +172,10 @@ public class GroupCreateActivity extends PresenterToolbarActivity<GroupCreateCon
 
     @Override
     public void onCreateSucceed() {
-
+        //提示成功
+        hideLoading();
+        Application.showToast(R.string.label_group_create_succeed);
+        finish();
     }
 
     @Override
@@ -187,7 +190,7 @@ public class GroupCreateActivity extends PresenterToolbarActivity<GroupCreateCon
 
     @Override
     public void onAdapterDataChanged() {
-
+        hideLoading();
     }
 
 

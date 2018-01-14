@@ -4,8 +4,10 @@ import net.bj.talker.factory.model.api.RspModel;
 import net.bj.talker.factory.model.api.account.AccountRspModel;
 import net.bj.talker.factory.model.api.account.LoginModel;
 import net.bj.talker.factory.model.api.account.RegisterModel;
+import net.bj.talker.factory.model.api.group.GroupCreateModel;
 import net.bj.talker.factory.model.api.message.MsgCreateModel;
 import net.bj.talker.factory.model.api.user.UserUpdateModel;
+import net.bj.talker.factory.model.card.GroupCard;
 import net.bj.talker.factory.model.card.MessageCard;
 import net.bj.talker.factory.model.card.UserCard;
 import net.bj.talker.factory.model.db.User;
@@ -75,5 +77,13 @@ public interface RemoteService {
     //发送消息的接口
     @POST("msg")
     Call<RspModel<MessageCard>> msgPush(@Body MsgCreateModel model);
+
+    //创建群
+    @POST("group")
+    Call<RspModel<GroupCard>> groupCreate(@Body GroupCreateModel model);
+
+    //创建群
+    @GET("group/{groupId}")
+    Call<RspModel<GroupCard>> groupFind(@Path("groupId") String groupId);
 
 }
