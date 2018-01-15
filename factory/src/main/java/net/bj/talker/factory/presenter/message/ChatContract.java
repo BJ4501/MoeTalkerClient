@@ -4,6 +4,9 @@ import net.bj.moetalker.factory.presenter.BaseContract;
 import net.bj.talker.factory.model.db.Group;
 import net.bj.talker.factory.model.db.Message;
 import net.bj.talker.factory.model.db.User;
+import net.bj.talker.factory.model.db.view.MemberUserModel;
+
+import java.util.List;
 
 /**
  * 聊天契约
@@ -35,7 +38,10 @@ public interface ChatContract {
 
     //群聊天的界面
     interface GroupView extends  View<Group>{
-
+        //显示管理员菜单
+        void showAdminOption(boolean isAdmin);
+        //初始化成员信息
+        void onInitGroupMembers(List<MemberUserModel> members, long moreCount);
     }
 
 
