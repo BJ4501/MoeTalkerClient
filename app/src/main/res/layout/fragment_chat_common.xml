@@ -1,5 +1,6 @@
 <net.bj.moetalker.common.widget.MessageLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lay_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -95,6 +96,20 @@
             android:enabled="true" />
 
     </LinearLayout>
+
+    <!--id名称固定：@id/airPanelSubLayout-->
+    <net.qiujuer.widget.airpanel.AirPanelFrameLayout
+        android:id="@id/airPanelSubLayout"
+        android:visibility="gone"
+        android:background="@color/grey_300"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <fragment
+            class="net.bj.moetalker.push.frags.panel.PanelFragment"
+            android:id="@+id/frag_panel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </net.qiujuer.widget.airpanel.AirPanelFrameLayout>
 
 
 </net.bj.moetalker.common.widget.MessageLayout>

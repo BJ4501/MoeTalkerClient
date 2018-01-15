@@ -10,28 +10,28 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.EditText;
 import android.widget.TextView;
 
-
 import com.bumptech.glide.Glide;
 
-import net.bj.moetalker.common.app.Fragment;
 import net.bj.moetalker.common.app.PresenterFragment;
 import net.bj.moetalker.common.widget.PortraitView;
 import net.bj.moetalker.common.widget.adapter.TextWatcherAdapter;
 import net.bj.moetalker.common.widget.recycler.RecyclerAdapter;
 import net.bj.moetalker.push.R;
 import net.bj.moetalker.push.activities.MessageActivity;
+import net.bj.moetalker.push.frags.panel.PanelFragment;
 import net.bj.talker.factory.model.db.Message;
 import net.bj.talker.factory.model.db.User;
 import net.bj.talker.factory.persistence.Account;
 import net.bj.talker.factory.presenter.message.ChatContract;
 import net.qiujuer.genius.ui.compat.UiCompat;
 import net.qiujuer.genius.ui.widget.Loading;
+import net.qiujuer.widget.airpanel.AirPanel;
+import net.qiujuer.widget.airpanel.Util;
 
 import java.util.Objects;
 
@@ -66,6 +66,11 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
     @BindView(R.id.btn_submit)
     View mSubmit;
 
+    //控制底部面板与软键盘过度的Boss控件
+    private AirPanel.Boss mPanelBoss;
+
+    private PanelFragment mPanelFragment;
+
     @Override
     protected void initArgs(Bundle bundle) {
         super.initArgs(bundle);
@@ -93,6 +98,17 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
 
         //在这里进行了控件绑定
         super.initWidget(root);
+
+        //初始化面板操作
+        mPanelBoss = root.findViewById(R.id.lay_content);
+        mPanelBoss.setup(new AirPanel.PanelListener() {
+            @Override
+            public void requestHideSoftKeyboard() {
+                //请求隐藏软键盘
+                Util.hideKeyboard(mContent);
+            }
+        });
+        mPanelFragment = (PanelFragment) getChildFragmentManager().findFragmentById(R.id.frag_panel);
 
         initToolbar();
         initAppbar();
@@ -147,16 +163,19 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
     }
 
+    //点击笑脸按钮
     @OnClick(R.id.btn_face)
     void onFaceClick(){
-
-
+        //只需要请求打开即可
+        mPanelBoss.openPanel();
+        mPanelFragment.showFace();
     }
 
+    //点击录音按钮
     @OnClick(R.id.btn_record)
     void onRecordClick(){
-
-
+        mPanelBoss.openPanel();
+        mPanelFragment.showRecord();
     }
 
 
@@ -173,8 +192,10 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
         }
     }
 
+    //点击更多。。。按钮
     private void onMoreClick(){
-        //TODO
+        mPanelBoss.openPanel();
+        mPanelFragment.showGallery();
     }
 
     @Override
