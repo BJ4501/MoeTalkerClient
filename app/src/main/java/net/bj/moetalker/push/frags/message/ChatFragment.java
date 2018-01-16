@@ -9,6 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewStub;
@@ -21,6 +23,7 @@ import net.bj.moetalker.common.app.PresenterFragment;
 import net.bj.moetalker.common.widget.PortraitView;
 import net.bj.moetalker.common.widget.adapter.TextWatcherAdapter;
 import net.bj.moetalker.common.widget.recycler.RecyclerAdapter;
+import net.bj.moetalker.face.Face;
 import net.bj.moetalker.push.R;
 import net.bj.moetalker.push.activities.MessageActivity;
 import net.bj.moetalker.push.frags.panel.PanelFragment;
@@ -28,6 +31,7 @@ import net.bj.talker.factory.model.db.Message;
 import net.bj.talker.factory.model.db.User;
 import net.bj.talker.factory.persistence.Account;
 import net.bj.talker.factory.presenter.message.ChatContract;
+import net.qiujuer.genius.ui.Ui;
 import net.qiujuer.genius.ui.compat.UiCompat;
 import net.qiujuer.genius.ui.widget.Loading;
 import net.qiujuer.widget.airpanel.AirPanel;
@@ -43,7 +47,7 @@ import butterknife.OnClick;
  */
 
 public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatContract.Presenter>
-        implements AppBarLayout.OnOffsetChangedListener,ChatContract.View<InitModel>{
+        implements AppBarLayout.OnOffsetChangedListener,ChatContract.View<InitModel>, PanelFragment.PanelCallback{
 
     protected String mReceiverId;
     protected Adapter mAdapter;
@@ -109,6 +113,7 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
             }
         });
         mPanelFragment = (PanelFragment) getChildFragmentManager().findFragmentById(R.id.frag_panel);
+        mPanelFragment.setup(this);
 
         initToolbar();
         initAppbar();
@@ -207,6 +212,12 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
     public void onAdapterDataChanged() {
         //界面没有占位布局，Recycler是一直显示的，所以不需要做任何事情
         //do nothing
+    }
+
+    @Override
+    public EditText getInputEditText() {
+        //返回输入框
+        return mContent;
     }
 
     //内容适配器
@@ -337,8 +348,14 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
         @Override
         protected void onBind(Message message) {
             super.onBind(message);
+
+            Spannable spannable = new SpannableString(message.getContent());
+
+            //解析表情
+            Face.decode(mContent,spannable, (int) Ui.dipToPx(getResources(),20));
+
             //把内容设置到布局上
-            mContent.setText(message.getContent());
+            mContent.setText(spannable);
         }
     }
 

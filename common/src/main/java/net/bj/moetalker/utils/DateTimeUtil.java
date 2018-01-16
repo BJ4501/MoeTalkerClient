@@ -10,7 +10,7 @@ import java.util.Locale;
  */
 
 public class DateTimeUtil {
-    public static final SimpleDateFormat FORMAT = new SimpleDateFormat("yy-MM-dd", Locale.ENGLISH);
+    public static final SimpleDateFormat FORMAT = new SimpleDateFormat("yy-MM-dd", Locale.CHINA);
 
     /**
      *

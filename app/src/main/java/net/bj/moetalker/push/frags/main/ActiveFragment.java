@@ -3,6 +3,8 @@ package net.bj.moetalker.push.frags.main;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -15,6 +17,7 @@ import net.bj.moetalker.common.widget.EmptyView;
 import net.bj.moetalker.common.widget.GalleryView;
 import net.bj.moetalker.common.widget.PortraitView;
 import net.bj.moetalker.common.widget.recycler.RecyclerAdapter;
+import net.bj.moetalker.face.Face;
 import net.bj.moetalker.push.R;
 import net.bj.moetalker.push.activities.MessageActivity;
 import net.bj.moetalker.push.activities.PersonalActivity;
@@ -23,6 +26,7 @@ import net.bj.talker.factory.model.db.Session;
 import net.bj.talker.factory.model.db.User;
 import net.bj.talker.factory.presenter.message.SessionContract;
 import net.bj.talker.factory.presenter.message.SessionPresenter;
+import net.qiujuer.genius.ui.Ui;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -126,7 +130,13 @@ public class ActiveFragment extends PresenterFragment<SessionContract.Presenter>
         protected void onBind(Session session) {
             mPortraitView.setup(Glide.with(ActiveFragment.this),session.getPicture());
             mName.setText(session.getTitle());
-            mContent.setText(TextUtils.isEmpty(session.getContent()) ? "" : session.getContent());
+
+            String str = TextUtils.isEmpty(session.getContent()) ? "" : session.getContent();
+            Spannable spannable = new SpannableString(str);
+            //解析表情
+            Face.decode(mContent,spannable,(int) mContent.getTextSize());
+            //把内容设置到布局上
+            mContent.setText(spannable);
             mTime.setText(DateTimeUtil.getSampleDate(session.getModifyAt()));
         }
 

@@ -101,7 +101,7 @@
     <net.qiujuer.widget.airpanel.AirPanelFrameLayout
         android:id="@id/airPanelSubLayout"
         android:visibility="gone"
-        android:background="@color/grey_300"
+        android:background="@color/white_alpha_224"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <fragment
