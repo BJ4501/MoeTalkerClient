@@ -22,6 +22,7 @@ import net.bj.moetalker.push.R;
 import net.bj.moetalker.push.activities.MessageActivity;
 import net.bj.moetalker.push.activities.PersonalActivity;
 import net.bj.moetalker.utils.DateTimeUtil;
+import net.bj.talker.factory.model.db.Message;
 import net.bj.talker.factory.model.db.Session;
 import net.bj.talker.factory.model.db.User;
 import net.bj.talker.factory.presenter.message.SessionContract;
@@ -143,7 +144,16 @@ public class ActiveFragment extends PresenterFragment<SessionContract.Presenter>
         @OnClick(R.id.im_portrait)
         void onPortraitClick(){
             //显示信息
-            PersonalActivity.show(getContext(),mData.getId());
+            //判断是群的还是人的
+            if (mData.getReceiverType() == Message.RECEIVER_TYPE_NONE){
+                //如果是人的
+                PersonalActivity.show(getContext(),mData.getId());
+            }else {
+                //如果是群的，目前只跳转到群当前的Session界面
+                //TODO 群信息页面
+                MessageActivity.show(getContext(),mData);
+            }
+
         }
 
     }

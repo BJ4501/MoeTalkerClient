@@ -112,8 +112,6 @@ public abstract class Activity extends AppCompatActivity {
             }
         }
 
-
-
         //当手机返回按钮被点击时
         super.onBackPressed();
         finish();
