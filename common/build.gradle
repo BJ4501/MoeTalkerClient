@@ -41,6 +41,9 @@ dependencies {
     compile "net.qiujuer.widget:airpanel:$rootProject.ext.airpanelVersion"
     compile "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
 
+    // Lame 录音 MP3 转码器
+    compile "net.qiujuer.lame:lame:$rootProject.ext.lameVersion"
+
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'

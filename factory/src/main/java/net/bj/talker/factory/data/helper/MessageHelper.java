@@ -162,7 +162,11 @@ public class MessageHelper {
 
     //上传语音
     private static String uploadAudio(String content) {
-        return null;
+        File file = new File(content);
+        if (!file.exists()||file.length()<=0)
+            return null;
+        //上传并返回
+        return UploadHelper.uploadAudio(content);
     }
 
     /**

@@ -125,6 +125,17 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new Adapter();
         mRecyclerView.setAdapter(mAdapter);
+        //添加适配器监听器,进行点击的实现
+        mAdapter.setmListener(new RecyclerAdapter.AdapterListenerImpl<Message>() {
+            @Override
+            public void onItemClick(RecyclerAdapter.ViewHolder holder, Message message) {
+                //下载-->播放
+
+
+
+            }
+        });
+
     }
 
     @Override
@@ -226,14 +237,12 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
     public void onSendGallery(String[] paths) {
         //图片回调回来
         mPresenter.pushImages(paths);
-
     }
 
     @Override
     public void onRecordDone(File file, long time) {
         //语音回调回来
-
-
+        mPresenter.pushAudio(file.getAbsolutePath(),time);
     }
 
     //内容适配器
@@ -377,6 +386,11 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
 
     //语音Holder
     class AudioHolder extends BaseHolder{
+        @BindView(R.id.txt_content)
+        TextView mContent;
+        @BindView(R.id.im_audio_track)
+        ImageView mAudioTrack;
+
 
         public AudioHolder(View itemView) {
             super(itemView);
@@ -385,7 +399,36 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
         @Override
         protected void onBind(Message message) {
             super.onBind(message);
+            //long
+            String attach = TextUtils.isEmpty(message.getAttach())?"0":message.getAttach();
+            mContent.setText(formatTime(attach));
+        }
 
+        //当播放开始
+        void onPalyStart(){
+            mAudioTrack.setVisibility(View.VISIBLE);
+        }
+
+        //当播放停止
+        void onPalyStop(){
+            //占位并隐藏 INVISIBLE
+            mAudioTrack.setVisibility(View.INVISIBLE);
+        }
+
+        private String formatTime(String attach){
+            float time;
+            try {
+                //将毫秒转换成秒
+                time = Float.parseFloat(attach)/1000f;
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                time = 0;
+            }
+            //取整到一位小数1.23 -> 1.2
+            String shortTime = String.valueOf(Math.round(time*10)/10f);
+            //1.0->1  1.200 -> 1.2
+            shortTime = shortTime.replaceAll("[.]0+?$|0+?$","");
+            return String.format("%s″", shortTime);
         }
     }
 
