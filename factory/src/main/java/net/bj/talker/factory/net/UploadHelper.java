@@ -23,11 +23,11 @@ import java.util.Date;
  */
 
 public class UploadHelper {
-    public static final String TAG = UploadHelper.class.getSimpleName();
+    private static final String TAG = UploadHelper.class.getSimpleName();
     //EndPoint 与存储区域有关系 此地址是华北地区
     public static final String ENDPOINT = "http://oss-cn-beijing.aliyuncs.com";
     //上传的仓库名
-    public static final String BUCKET_NAME = "moetalker";
+    private static final String BUCKET_NAME = "moetalker";
 
     private static OSS getClient(){
 
