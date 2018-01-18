@@ -1,5 +1,7 @@
 package net.bj.moetalker.push;
 
+import android.content.Context;
+
 import com.igexin.sdk.PushManager;
 
 import net.bj.moetalker.common.app.Application;
@@ -19,6 +21,12 @@ public class App extends Application {
         Factory.setup();
         //推送进行初始化
         PushManager.getInstance().initialize(this);
+
+    }
+
+    @Override
+    protected void showAccountView(Context context) {
+        //TODO 登录界面的显示
 
     }
 }

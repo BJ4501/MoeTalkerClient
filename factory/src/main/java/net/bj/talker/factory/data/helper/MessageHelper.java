@@ -81,6 +81,8 @@ public class MessageHelper {
                             //失败
                             card.setStatus(Message.STATUS_FAILED);
                             Factory.getMessageCenter().dispatch(card);
+                            //直接返回
+                            return;
                         }
                         //成功则把网络路径进行替换
                         card.setContent(content);

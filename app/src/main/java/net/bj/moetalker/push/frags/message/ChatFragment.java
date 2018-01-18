@@ -124,6 +124,22 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
                 Util.hideKeyboard(mContent);
             }
         });
+        mPanelBoss.setOnStateChangedListener(new AirPanel.OnStateChangedListener() {
+            @Override
+            public void onPanelStateChanged(boolean isOpen) {
+                //面板状态改变
+                if (isOpen)
+                    onBottomPanelOpened();
+            }
+
+            @Override
+            public void onSoftKeyboardStateChanged(boolean isOpen) {
+                //软键盘状态改变
+                if (isOpen)
+                    onBottomPanelOpened();
+            }
+        });
+
         mPanelFragment = (PanelFragment) getChildFragmentManager().findFragmentById(R.id.frag_panel);
         mPanelFragment.setup(this);
 
@@ -196,6 +212,25 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
     public void onDestroy() {
         super.onDestroy();
         mAudioPlayer.destroy();
+    }
+
+    private void onBottomPanelOpened(){
+        //当底部面板或者软键盘打开时触发
+        if (mAppBarLayout != null){
+            mAppBarLayout.setExpanded(false,true);
+        }
+    }
+
+    @Override
+    public boolean onBackPrecessed() {
+        //如果面板(表情，语音，图片)是打开的状态，就先关闭面板
+        //拦截处理
+        if (mPanelBoss.isOpen()){
+            //关闭面板并且返回true代表自己已经处理了
+            mPanelBoss.closePanel();
+            return true;
+        }
+        return super.onBackPrecessed();
     }
 
     @Override
