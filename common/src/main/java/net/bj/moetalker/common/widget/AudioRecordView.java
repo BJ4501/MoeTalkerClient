@@ -57,19 +57,20 @@ public class AudioRecordView extends FrameLayout implements View.OnTouchListener
     // 回调方法
     private Callback mCallback;
 
+    //fixme 使用此控件 init 会崩溃，原因未知
     public AudioRecordView(@NonNull Context context) {
         super(context);
-        init();
+        //init();
     }
 
     public AudioRecordView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init();
+        //init();
     }
 
     public AudioRecordView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        //init();
     }
 
     private void init() {
