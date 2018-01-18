@@ -20,18 +20,24 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import net.bj.moetalker.common.app.Application;
 import net.bj.moetalker.common.app.PresenterFragment;
+import net.bj.moetalker.common.tools.AudioPlayHelper;
 import net.bj.moetalker.common.widget.PortraitView;
 import net.bj.moetalker.common.widget.adapter.TextWatcherAdapter;
 import net.bj.moetalker.common.widget.recycler.RecyclerAdapter;
 import net.bj.moetalker.face.Face;
 import net.bj.moetalker.push.R;
 import net.bj.moetalker.push.activities.MessageActivity;
+import net.bj.moetalker.push.frags.main.ContactFragment;
 import net.bj.moetalker.push.frags.panel.PanelFragment;
 import net.bj.talker.factory.model.db.Message;
 import net.bj.talker.factory.model.db.User;
 import net.bj.talker.factory.persistence.Account;
 import net.bj.talker.factory.presenter.message.ChatContract;
+import net.bj.talker.factory.utils.FileCache;
+import net.qiujuer.genius.kit.handler.Run;
+import net.qiujuer.genius.kit.handler.runable.Action;
 import net.qiujuer.genius.ui.Ui;
 import net.qiujuer.genius.ui.compat.UiCompat;
 import net.qiujuer.genius.ui.widget.Loading;
@@ -76,6 +82,10 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
     private AirPanel.Boss mPanelBoss;
 
     private PanelFragment mPanelFragment;
+
+    //语音基础类
+    private FileCache<AudioHolder> mAudioFileCache;
+    private AudioPlayHelper<AudioHolder> mAudioPlayer;
 
     @Override
     protected void initArgs(Bundle bundle) {
@@ -130,12 +140,62 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
             @Override
             public void onItemClick(RecyclerAdapter.ViewHolder holder, Message message) {
                 //下载-->播放
+                if (message.getType() == Message.TYPE_AUDIO&&holder instanceof ChatFragment.AudioHolder){
+                    //权限的判断，目前权限已经申请了，无需再确认
+                    //OSS路径
+                    mAudioFileCache.download((AudioHolder) holder, message.getContent());
+                }
+            }
+        });
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        //进入界面时候就进行初始化
+        mAudioPlayer = new AudioPlayHelper<>(new AudioPlayHelper.RecordPlayListener<AudioHolder>() {
+            @Override
+            public void onPlayStart(AudioHolder audioHolder) {
+                //泛型的作用在这里显示出来了
+                audioHolder.onPalyStart();
+            }
 
+            @Override
+            public void onPlayStop(AudioHolder audioHolder) {
+                //提示停止
+                audioHolder.onPalyStop();
+            }
 
+            @Override
+            public void onPlayError(AudioHolder audioHolder) {
+                //提示失败
+                Application.showToast(R.string.toast_audio_play_error);
             }
         });
 
+        //下载工具类
+        mAudioFileCache = new FileCache<>("audio/cache", "mp3", new FileCache.CacheListener<AudioHolder>() {
+            @Override
+            public void onDownloadSucceed(final AudioHolder holder,final File file) {
+                Run.onUiAsync(new Action() {
+                    @Override
+                    public void call() {
+                        mAudioPlayer.trigger(holder,file.getAbsolutePath());
+                    }
+                });
+            }
+
+            @Override
+            public void onDownloadFailed(AudioHolder holder) {
+                Application.showToast(R.string.toast_download_error);
+            }
+        });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mAudioPlayer.destroy();
     }
 
     @Override
