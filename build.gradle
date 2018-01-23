@@ -37,7 +37,7 @@ ext{
     versionCode = 1
     versionName = '1.0.0'
     //相关依赖库版本
-    supportVersion = '26.1.0'
+    supportVersion = '27.0.2'
     butterknifeVersion = '8.5.1'
 
     geniusVersion = '2.0.0'
@@ -56,7 +56,7 @@ ext{
 
     airpanelVersion = '1.1.0'
 
-    lameVersion = '1.0.0'
+    lameVersion = '1.2.0'
 
 
 

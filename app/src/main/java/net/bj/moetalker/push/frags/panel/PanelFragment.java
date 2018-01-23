@@ -145,7 +145,7 @@ public class PanelFragment extends Fragment {
     //初始化语音
     private void initRecord(View root){
         //fixme
-        /*View recordView = mRecordPanel = root.findViewById(R.id.lay_panel_record);
+        View recordView = mRecordPanel = root.findViewById(R.id.lay_panel_record);
         final AudioRecordView audioRecordView = recordView.findViewById(R.id.view_audio_record);
 
         //录音缓存文件
@@ -208,7 +208,7 @@ public class PanelFragment extends Fragment {
                         break;
                 }
             }
-        });*/
+        });
 
     }
 
@@ -250,19 +250,19 @@ public class PanelFragment extends Fragment {
 
     //fixme
     public void showFace(){
-        //mRecordPanel.setVisibility(View.GONE);
+        mRecordPanel.setVisibility(View.GONE);
         mGalleryPanel.setVisibility(View.GONE);
         mFacePanel.setVisibility(View.VISIBLE);
     }
 
     public void showRecord(){
-        //mRecordPanel.setVisibility(View.VISIBLE);
+        mRecordPanel.setVisibility(View.VISIBLE);
         mGalleryPanel.setVisibility(View.GONE);
         mFacePanel.setVisibility(View.GONE);
     }
 
     public void showGallery(){
-        //mRecordPanel.setVisibility(View.GONE);
+        mRecordPanel.setVisibility(View.GONE);
         mGalleryPanel.setVisibility(View.VISIBLE);
         mFacePanel.setVisibility(View.GONE);
     }
