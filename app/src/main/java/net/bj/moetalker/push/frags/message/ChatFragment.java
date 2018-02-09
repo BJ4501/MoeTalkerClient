@@ -319,7 +319,10 @@ public abstract class ChatFragment<InitModel> extends PresenterFragment<ChatCont
     @Override
     public void onAdapterDataChanged() {
         //界面没有占位布局，Recycler是一直显示的，所以不需要做任何事情
-        //do nothing
+        //NOTE: 刷新滚动
+        if (mAdapter.getItemCount() > 0){
+            mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount());
+        }
     }
 
     @Override

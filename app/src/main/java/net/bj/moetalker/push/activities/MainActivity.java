@@ -2,18 +2,14 @@ package net.bj.moetalker.push.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnticipateOvershootInterpolator;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -22,12 +18,9 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.ViewTarget;
 
-import net.bj.moetalker.common.Common;
 import net.bj.moetalker.common.app.Activity;
 import net.bj.moetalker.common.widget.PortraitView;
 import net.bj.moetalker.push.R;
-import net.bj.moetalker.push.activities.AccountActivity;
-import net.bj.moetalker.push.frags.assist.PermissionsFragment;
 import net.bj.moetalker.push.frags.main.ActiveFragment;
 import net.bj.moetalker.push.frags.main.ContactFragment;
 import net.bj.moetalker.push.frags.main.GroupFragment;

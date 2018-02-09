@@ -1,24 +1,14 @@
 package net.bj.talker.factory.data.user;
 
-import android.support.annotation.NonNull;
-
 import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.structure.database.transaction.QueryTransaction;
 
 import net.bj.moetalker.factory.data.DataSource;
 import net.bj.talker.factory.data.BaseDbRepository;
-import net.bj.talker.factory.data.helper.DbHelper;
 import net.bj.talker.factory.model.db.User;
 import net.bj.talker.factory.model.db.User_Table;
 import net.bj.talker.factory.persistence.Account;
 
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-
-import java.util.Set;
 
 /**
  * 联系人仓库
